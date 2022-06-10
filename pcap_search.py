@@ -21,8 +21,7 @@ def Find(string):
 #Check if URL is malicious
 def CheckUrl(url):
 
-       #with virustotal_python.Virustotal("<VirusTotal API Key>") as vtotal:
-        with virustotal_python.Virustotal("b24bfd3b0febf2f1eddcbb93122b50738e2fe92fbc4eff5720cd470ff532835c") as vtotal:       
+       with virustotal_python.Virustotal("<VirusTotal API Key>") as vtotal:      
             try:
                 resp = vtotal.request("urls", data={"url": url}, method="POST")
                 # Safe encode URL in base64 format
