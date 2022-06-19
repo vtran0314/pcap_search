@@ -44,8 +44,27 @@ def isMalicious(file):
 
 #TO-DO Password encryption method
 #def encPasswd(pw):
+from passlib.hash import bcrypt
+from getpass import getpass
+
+
+#FIX THIS CODE
+#key = b'pRmgMa8T0INjEAfksaq2aafzoZXEuwKI7wDe4c1F8AY='
+#cipher_suite = Fernet(key)
+#ciphered_text = cipher_suite.encrypt(b'SuperSecretpassword')
+#with open('c:\savedfiles\mssqltip_bytes.bin', 'wb') as file_object:  file_object.write(ciphered_text)
+
+#with open('c:\savedfiles\mssqltip_bytes.bin', 'rb') as file_object:
+#    for line in file_object:
+#        encryptedpwd = line
+#print(encryptedpwd)
+
 
 #Password encryption
+#https://towardsdatascience.com/secure-password-handling-in-python-6b9f5747eca5
+#https://www.mssqltips.com/sqlservertip/5173/encrypting-passwords-for-use-with-python-and-sql-server/
+#https://www.pdq.com/blog/secure-password-with-powershell-encrypting-credentials-part-1/
+#https://quabr.com/44194860/how-can-i-use-encrypted-secure-password-in-smtp-credentials
 #https://www.makeuseof.com/encrypt-password-in-python-bcrypt/
 	
 
