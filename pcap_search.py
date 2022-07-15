@@ -42,64 +42,48 @@ def isMalicious(file):
 		if ("'malicious': 1") in line:
 			return true
 
-#TO-DO Password encryption method
-#def encPasswd(pw):
-from passlib.hash import bcrypt
-from getpass import getpass
-
-
-#FIX THIS CODE
-#key = b'pRmgMa8T0INjEAfksaq2aafzoZXEuwKI7wDe4c1F8AY='
-#cipher_suite = Fernet(key)
-#ciphered_text = cipher_suite.encrypt(b'SuperSecretpassword')
-#with open('c:\savedfiles\mssqltip_bytes.bin', 'wb') as file_object:  file_object.write(ciphered_text)
-
-#with open('c:\savedfiles\mssqltip_bytes.bin', 'rb') as file_object:
-#    for line in file_object:
-#        encryptedpwd = line
-#print(encryptedpwd)
-
-
-#Password encryption
-#https://towardsdatascience.com/secure-password-handling-in-python-6b9f5747eca5
-#https://www.mssqltips.com/sqlservertip/5173/encrypting-passwords-for-use-with-python-and-sql-server/
-#https://www.pdq.com/blog/secure-password-with-powershell-encrypting-credentials-part-1/
-#https://quabr.com/44194860/how-can-i-use-encrypted-secure-password-in-smtp-credentials
-#https://www.makeuseof.com/encrypt-password-in-python-bcrypt/
-	
-
-
-
 def alert():
-#Transfer email over ssl - LOOK AT THE BELOW URL
-#https://devrescue.com/python-send-email-with-smtp-over-ssl/
-
-	import smtplib #importing the module
-	
-	sender_add='sender_email@example.com' #storing the sender's mail id
-	receiver_add='receiver_email@example.com' #storing the receiver's mail id
-	password='Password' #storing the password to log in
-	
-	#creating the SMTP server object by giving SMPT server address and port number
-	smtp_server=smtplib.SMTP("smtp.office365.com",587)
-	smtp_server.ehlo() #setting the ESMTP protocol
-	smtp_server.starttls() #setting up to TLS connection
-	smtp_server.ehlo() #calling the ehlo() again as encryption happens on calling startttls()
-	
-	print('Sending email...Please wait amoment')
-	smtp_server.login(sender_add,password) #logging into outlook email id
-	
+import getpass
+import socket
+import smtplib
+from smtplib import SMTPAuthenticationError
+	sender_add='your_email@gmail.com' #storing the sender's mail id
+	receiver_add='receiver_email@gmail.com' #storing the receiver's mail id
 	#Message content
 	msg_to_be_sent ='''
 	Alert, Cybersecurity team!		
 	Malicious scanner have detected suspicious behavior, require immediate action!!!!
 	'''
-	#sending the mail by specifying the from and to address and the message 
-	smtp_server.sendmail(sender_add,receiver_add,msg_to_be_sent)
 	
-	print('Successfully the mail is sent') #priting a message on sending the mail
+	#creating the SMTP server object by giving SMPT server address and port number
+	try:
+		server = smtplib.SMTP("smtp.office365.com",587)
+	except socket.error as err:
+		print(err)
+		server = None
 	
-	smtp_server.quit()#terminating the server
+	if server is not None:
+		server.ehlo() #setting the ESMTP protocol
+		server.starttls() #setting up to TLS connection
+		server.ehlo() #calling the ehlo() again as encryption happens on calling startttls()
+		try:
+			#Get user password	
+			password = getpass.getpass(prompt="Please enter Password: ")
+			print("Authenticating")
+			server.login(sender_add,password) #logging into outlook email id
+			print("Completed Authenticating")
+		except smtplib.SMTPAuthenticationError as err:	
+			login = None
+			print("Failed Authenticating: ", err)
+		print(login)
+
+		if login is not None:
+			print("Logging in and Sending")
+			#sending the mail by specifying the from and to address and the message 
+			server.sendmail(sender_add,receiver_add,msg_to_be_sent)
+			print('Successfully sent the email') #priting a message on sending the mail
+			server.quit() 
+	
 
 #=============================MAIN SECTION=================================================
 
@@ -131,7 +115,7 @@ with open(output_filename) as f:
                         	time.sleep(2)                   
 
 with open("vtotal_result-" + timestr + ".txt") as file:
-	if isMalicious(file) == 1: # Setting to true for testing alert(). Change it before use
+	if isMalicious(file) == 1:
 		alert()
 	else:
 		print("All Good!....For now >:)")
@@ -146,3 +130,9 @@ with open("vtotal_result-" + timestr + ".txt") as file:
 	#https://pythongeeks.org/send-email-using-python/
 #Transfer email over ssl - LOOK AT THE BELOW URL
 	#https://devrescue.com/python-send-email-with-smtp-over-ssl/
+#Password Encryption
+	#https://towardsdatascience.com/secure-password-handling-in-python-6b9f5747eca5
+	#https://www.mssqltips.com/sqlservertip/5173/encrypting-passwords-for-use-with-python-and-sql-server/
+	#https://www.pdq.com/blog/secure-password-with-powershell-encrypting-credentials-part-1/
+	#https://quabr.com/44194860/how-can-i-use-encrypted-secure-password-in-smtp-credentials
+	#https://www.makeuseof.com/encrypt-password-in-python-bcrypt/
